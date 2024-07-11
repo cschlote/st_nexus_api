@@ -1,0 +1,22 @@
+{
+	"authors": [
+		"Carsten Schlote"
+	],
+	"copyright": "Copyright © 2024, Carsten Schlote",
+	"dependencies": {
+		"silly": "~>1.2.0-dev.2",
+		"jsonizer": "~>0.7.7",
+		"requests": "~>2.1.3"
+	},
+	"description": "A library to access the Sonatype Nexus Repository API",
+	"license": "GPL3",
+	"name": "st_nexus_api",
+	"targetType": "autodetect",
+	"versions": [
+		"DLangRequests",
+		"_LibCurl"
+	],
+	"postGenerateCommands": [
+		"echo \"XXX: cd docs/ && dub run adrdox -- ../source\""
+	]
+}

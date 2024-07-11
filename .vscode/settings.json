@@ -1,0 +1,12 @@
+{
+    "d.dubArchType": "x86_64",
+    "dfmt.braceStyle": "allman",
+    "d.overrideDfmtEditorconfig": true,
+    "d.enableDubLinting": true,
+    "d.enableLinting": true,
+    "d.enableFormatting": true,
+    "d.enableStaticLinting": true,
+    "d.dmdPath": "dmd",
+    "d.dubCompiler": "ldc2",
+    "cmake.configureOnOpen": false
+}

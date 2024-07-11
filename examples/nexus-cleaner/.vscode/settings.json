@@ -1,0 +1,9 @@
+{
+    "dscanner.ignoredKeys": [
+        "dscanner.style.allman",
+        "dscanner.style.long_line",
+        "dscanner.style.phobos_naming_convention",
+        "dscanner.style.undocumented_declaration",
+        "dscanner.suspicious.unmodified"
+    ]
+}

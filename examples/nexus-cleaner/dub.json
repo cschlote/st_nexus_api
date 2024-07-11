@@ -1,0 +1,26 @@
+{
+	"authors": [
+		"Carsten Schlote"
+	],
+	"copyright": "Copyright © 2024, Carsten Schlote",
+	"dependencies": {
+		"silly": ">=1.2.0-dev.1 <1.3.0-0",
+		"st_nexus_api": "~>0"
+	},
+	"description": "Simple tool to clean Nexus repositories contents according to a configuration",
+	"dflags": [
+		"-J."
+	],
+	"importPaths": [
+		"source"
+	],
+	"license": "GPL3",
+	"name": "nexus-cleaner",
+	"preBuildCommands": [
+		"printf \"%s\" $$(uname -m) > ARCH",
+		"./createGitTag.sh > GITTAG"
+	],
+	"postGenerateCommands": [
+		"echo \"XXX: cd docs/ && dub run adrdox -- ../source\""
+	]
+}

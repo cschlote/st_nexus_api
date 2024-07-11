@@ -22,3 +22,14 @@ docs/
 
 # Code coverage
 *.lst
+
+# Project
+ARCH
+GITTAG
+st_nexus_api-test-library
+test_env.sh
+tests/nxcomponents.json
+tests/nxassets.json
+tests/nxblobs.json
+*~
+generated-docs

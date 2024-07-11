@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/nexus-demo1
+nexus-demo1.so
+nexus-demo1.dylib
+nexus-demo1.dll
+nexus-demo1.a
+nexus-demo1.lib
+nexus-demo1-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

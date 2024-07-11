@@ -1,0 +1,155 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "dub",
+            "test": true,
+            "force": false,
+            "run": true,
+            "cwd": "${workspaceFolder}",
+            "compiler": "$current",
+            "archType": "$current",
+            "buildType": "unittest-cov",
+            "dub_args": [
+                "-b",
+                "unittest-cov",
+                "--",
+                "-v",
+                "-t1"
+            ],
+            // "dub_args": ["-b", "unittest-cov", "--", "-v", "-t1", "-i", "package_downloader*"],
+            "problemMatcher": [
+                "$dmd",
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "label": "dub: Test st_nexus_api",
+            "detail": "Execute 'dub test' with current compiler and arch setup, with coverage information"
+        },
+        {
+            "type": "dub",
+            "run": false,
+            "cwd": "${workspaceFolder}",
+            "compiler": "$current",
+            "archType": "$current",
+            "buildType": "$current",
+            "configuration": "$current",
+            "problemMatcher": [
+                "$dmd",
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "label": "dub: Build st_nexus_api",
+            "detail": "Execute 'dub build' with current compiler, arch, build and configuration setup"
+        },
+        {
+            "type": "dub",
+            "run": false,
+            "cwd": "${workspaceFolder}",
+            "force": true,
+            "compiler": "$current",
+            "archType": "$current",
+            "buildType": "$current",
+            "configuration": "$current",
+            "problemMatcher": [
+                "$dmd",
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "label": "dub: Rebuild st_nexus_api",
+            "detail": "Execute 'dub build' with current compiler, arch, build and configuration setup, forced rebuild"
+        },
+        {
+            "label": "cleaninputs",
+            "command": "rm", // Could be any other shell command
+            "args": [
+                "-rf",
+                "inputs"
+            ],
+            "type": "shell"
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-ddocs",
+            "type": "shell",
+            "command": "dub build --build=docs -v",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-ddox",
+            "type": "shell",
+            "command": "dub build --build=ddox -v",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-adrdox",
+            "type": "shell",
+            "command": "cd docs && dub run adrdox -- ../source",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-cleaner",
+            "type": "shell",
+            "command": "cd examples/nexus-cleaner && dub build --compiler=ldc2 -v -f",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-demo1",
+            "type": "shell",
+            "command": "cd examples/nexus-demo1 && dub build --compiler=ldc2 -v -f",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "test-host",
+            "type": "shell",
+            "command": "dub test --compiler=ldc2 -v",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}

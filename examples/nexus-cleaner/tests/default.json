@@ -1,0 +1,36 @@
+{
+    "repositories": [
+        {
+            "minAge": "90d",
+            "minFiles": 5,
+            "nxRepository": "NexusTest",
+            "nxRules": [
+                {
+                    "group": "\/Test-Autogen",
+                    "groupFilesBy": "_",
+                    "minAge": "5min",
+                    "minFiles": 5
+                },
+                {
+                    "group": "\/Test",
+                    "groupFilesBy": "",
+                    "minAge": "90d",
+                    "minFiles": 5
+                }
+            ]
+        }
+    ],
+    "serverUrl": "https:\/\/nexus.example.com",
+    "volumes": [
+        {
+            "blobstore": "default",
+            "minFreeSize": 4096,
+            "mountpoint": ""
+        },
+        {
+            "blobstore": "",
+            "minFreeSize": 8192,
+            "mountpoint": "\/usr"
+        }
+    ]
+}

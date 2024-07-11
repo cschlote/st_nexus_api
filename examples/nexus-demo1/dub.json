@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"Carsten Schlote"
+	],
+	"copyright": "Copyright © 2024, Carsten Schlote",
+	"description": "Some demo to show usage of st_nexus_api library",
+	"license": "GPL3",
+	"name": "nexus-demo1"
+}
