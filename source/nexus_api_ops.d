@@ -15,6 +15,8 @@ import jsonizer;
 
 import nexus_api_io;
 
+//FIXME: const scope @safe pure nothrow @nogc
+
 /**
 * Exception thrown on unrecoverable errors or enforce() asserts
 */
@@ -35,25 +37,36 @@ class NexusOpsException : Exception
     }
 }
 
-/** Nexus Email configuration 
+@("class NexusOpsException")
+unittest
+{
+    auto ex1 = new  NexusOpsException("Booh.", 3, 1);
+    assert(ex1 !is null);
+    auto ex2 = new  NexusOpsException("Booh.", "test.d", 1);
+    assert(ex2 !is null);
+    auto ex3 = new  NexusOpsException("Booh.");
+    assert(ex3 !is null);
+}
+
+/** Nexus Email configuration
  */
 struct NxEmail
 {
     mixin JsonizeMe; // this is required to support jsonization
     @jsonize
     { // public serialized members
-        bool enabled; /// 
-        string host; /// 
-        int port; /// 
-        string username; /// 
-        string password; /// 
-        string fromAddress; /// 
-        string subjectPrefix; /// 
-        bool startTlsEnabled; /// 
-        bool startTlsRequired; /// 
-        bool sslOnConnectEnabled; /// 
-        bool sslServerIdentityCheckEnabled; /// 
-        bool nexusTrustStoreEnabled; /// 
+        bool enabled; ///
+        string host; ///
+        int port; ///
+        string username; ///
+        string password; ///
+        string fromAddress; ///
+        string subjectPrefix; ///
+        bool startTlsEnabled; ///
+        bool startTlsRequired; ///
+        bool sslOnConnectEnabled; ///
+        bool sslServerIdentityCheckEnabled; ///
+        bool nexusTrustStoreEnabled; ///
     }
 }
 
@@ -309,7 +322,7 @@ public:
     }
 
     /** Test the status of the RO API
-     * 
+     *
      * Returns: true, if connection is ok
      */
     bool getNXStatus() @safe
@@ -330,7 +343,7 @@ public:
     }
 
     /** Test the status of the WR API
-     * 
+     *
      * Returns: true, if connection is ok
      */
     bool getNXStatusWritable() @safe
@@ -352,7 +365,7 @@ public:
     }
 
     /** Get the status of several subsystems
-     * 
+     *
      * Returns: true, if connection is ok
      */
     JSONValue getNXStatusCheck()

@@ -1,5 +1,8 @@
 /** Low-Level IO code for communication with the Sonytype Nexus API
  *
+ * This modul holds a set of lowlevel IO routines, which are tuned for the
+ * use with the Nexus API.
+ *
  * Authors: Carsten Schlote <schlote@vahanus.net>
  * Copyright: 2018-2024 by Carsten Schlote
  * License: GPL3, All rights reserved
@@ -30,14 +33,26 @@ class NexusIOException : Exception
     }
 }
 
+@("class NexusIOException")
+unittest
+{
+    auto ex1 = new  NexusIOException("Booh.", 3, 1);
+    assert(ex1 !is null);
+    auto ex2 = new  NexusIOException("Booh.", "test.d", 1);
+    assert(ex2 !is null);
+    auto ex3 = new  NexusIOException("Booh.");
+    assert(ex3 !is null);
+}
+
+
 /** Construct the API URL from the parameters
- * 
+ *
  * Params:
  *   nxServer = server name, like "https://nexus.example.com"
  *   endPoint = The endpoint name, e.g. "assets", "components" or "status/check"
  *   repositoryName = Optional name of repository as argument
  *   contToken = Optional contToken for long responses
- * Returns: 
+ * Returns:
  *   Constructed string to access the Nexus API
  */
 string getNexusAPIUrl(string nxServer, string endPoint, string repositoryName, string contToken = null) @trusted
@@ -199,7 +214,7 @@ unittest
     assertNotThrown(getJSONFromAPI(url, user, paswd));
 }
 
-/** 
+/**
  * A Helper Structure to store multi-part form data
  */
 struct NxFormData
@@ -213,13 +228,13 @@ struct NxFormData
 }
 
 /** Post a multipart form to the API
- * 
+ *
  * Params:
  *   apiurl = the full URL to access the Nexus API
  *   userName = empty or a username
  *   passWord = empty or a password
  *   formdata = an array of helper structures to encode the multipart message
- * Returns: 
+ * Returns:
  */
 string postFormDataToAPI(string apiurl, string userName, string passWord, NxFormData[] formdata)
 in (apiurl !is null, "We need a apiurl string.")
@@ -371,7 +386,7 @@ unittest
     // writeln(response);
     const auto jsonObj1 = response.parseJSON;
     assert(jsonObj1.type == JSONType.object, "Faulty response");
-    
+
 
     auto server = environment.get("NX_SERVER", "http://nexus.example.com");
     apiurl = getNexusAPIUrl(server, "components", "NexusTest", "");
