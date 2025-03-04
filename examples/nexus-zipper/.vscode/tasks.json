@@ -1,0 +1,95 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "dub",
+            "test": true,
+            "cwd": "${workspaceFolder}",
+            "compiler": "$current",
+            "archType": "$current",
+            "buildType": "unittest-cov",
+            "configuration": "$current",
+            "problemMatcher": [
+                "$dmd"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "label": "dub: Test nexus-zipper",
+            "detail": "dub test --compiler=dmd -a=x86_64 -b=debug -c=application"
+        },
+        {
+            "type": "dub",
+            "run": false,
+            "cwd": "${workspaceFolder}",
+            "compiler": "$current",
+            "archType": "$current",
+            "buildType": "$current",
+            "configuration": "$current",
+            "problemMatcher": [
+                "$dmd"
+            ],
+            "group": "build",
+            "label": "dub: Build nexus-zipper",
+            "detail": "dub build --compiler=dmd -a=x86_64 -b=debug -c=application"
+        },
+        {
+            "type": "dub",
+            "run": false,
+            "cwd": "${workspaceFolder}",
+            "force": true,
+            "compiler": "$current",
+            "archType": "$current",
+            "buildType": "$current",
+            "configuration": "$current",
+            "problemMatcher": [
+                "$dmd"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "label": "dub: Rebuild nexus-zipper",
+            "detail": "dub build --force --compiler=dmd -a=x86_64 -b=debug -c=application"
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-ddocs",
+            "type": "shell",
+            "command": "dub build --build=docs -v",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-ddox",
+            "type": "shell",
+            "command": "dub build --build=ddox -v",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            // Requires dub and ldc to be installed on host
+            "label": "build-adrdox",
+            "type": "shell",
+            "command": "cd docs && dub run adrdox -- ../source",
+            "group": {
+                "kind": "build"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}

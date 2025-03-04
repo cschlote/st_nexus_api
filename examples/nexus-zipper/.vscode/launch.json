@@ -1,0 +1,32 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug All",
+            "program": "${workspaceFolder}/nexus-zipper",
+            "args": [ ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug with Config",
+            "program": "${workspaceFolder}/nexus-zipper",
+            "args": [ "-v", "-c", "tests/config.json", "-j", "tests/cache.json", "-s", "200", "-m", "-t", "5" ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug dub test library (silly)",
+            "program": "${workspaceFolder}/nexus-zipper-test-application",
+            "args": [ "-v" ],
+            "cwd": "${workspaceFolder}"
+        },
+    ]
+}
