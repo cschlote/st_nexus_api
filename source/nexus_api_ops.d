@@ -127,6 +127,7 @@ struct NxComponent
     }
 }
 
+/** Information about SoftQUota */
 struct NxSoftQuota
 {
     mixin JsonizeMe; // this is required to support jsonization
@@ -136,6 +137,8 @@ struct NxSoftQuota
         size_t limit; /// 1073741824
     }
 }
+
+/** Information about Blob storage */
 
 struct NxBlob
 {
@@ -692,9 +695,9 @@ public:
         auto apiurl = getNexusAPIUrl(serverUrl, "assets/" ~ id, "");
         auto response = getJSONFromAPI!"GET"(apiurl, userName, passWord);
         assert(response.length != 0, "Expected some response");
-        JSONValue j = parseJSON(response);
+        const JSONValue j = parseJSON(response);
 
-        auto convertedData = j.fromJSON!(NxAsset);
+        const auto convertedData = j.fromJSON!(NxAsset);
         asset = convertedData;
         return true;
     }
