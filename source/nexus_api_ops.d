@@ -947,15 +947,16 @@ public:
     /** Upload a single component to the server
      *
      * Params:
-     *   group = The Nexus group name
+     *   group = The Nexus group name, with leading /
      *   name = filename to report
      *   data = the data or if prefixed with @ a file with the data
      *   mimetype = the MIME type of your data
      */
     void uploadNexusComponent(string group, string name, string data, string mimetype)
     {
+        if (!group.startsWith("/")) group = "/" ~ group;
         NxFormData[] formdata = [
-            NxFormData("raw.directory", "/" ~ group, "", "", ""),
+            NxFormData("raw.directory", group, "", "", ""),
             NxFormData("raw.asset1", "", name, data, mimetype),
             NxFormData("raw.asset1.filename", name, "", "", "")
         ];
