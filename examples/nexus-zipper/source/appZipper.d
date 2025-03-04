@@ -244,6 +244,17 @@ bool runZipper(string argServerURL, string argNXRpositoryName, string argNXPath,
     auto user = environment.get("NX_USER", argUser);
     auto passwd = environment.get("NX_PASSWORD", argPasswd);
 
+    assert(server.length, "Need at least a NX server name");
+    assert(repo.length, "Need at least a NX repository name");
+    assert(path.length, "Need at least a NX path name");
+    assert(user.length, "Need at least a NX user name");
+    assert(passwd.length, "Need at least a NX password");
+    writeln("Server: ", server);
+    writeln("Repository: ", repo);
+    writeln("Path: ", path);
+    writeln("User: ", user);
+    // writeln("Password: ", passwd);
+
     auto nxobj = new NexusComponents();
     assert(nxobj !is null);
 
@@ -258,9 +269,8 @@ bool runZipper(string argServerURL, string argNXRpositoryName, string argNXPath,
     assert(nxobj.getNXStatus() == true);
     assert(nxobj.getNXStatusWritable() == true);
     auto jsonObj = nxobj.getNXStatusCheck();
-    assert(jsonObj.type == JSONType.object);
+    assert(jsonObj.type == JSONType.object, "No JSON object returned.");
 
-    assert(server, "Need at least a NX repository name");
 
     logFLine("Scanning Nexus server '%s'", server);
     logFLine("Scanning Nexus repository '%s'", repo);
