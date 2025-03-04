@@ -405,3 +405,76 @@ unittest
     // writeln(response);
     assert(response.length == 0, "Unexpected response)");
 }
+
+/** Download a file from a Nexus Asset DownloadUrl
+ *
+ * Provides a method to download a file from the Nexus using the selected backend.
+ * This method, `downloadFileFromNexus()`, simplifies the process of downloading the contents
+ * of a URL, eliminating the need to implement this functionality in your code.
+ *
+ * This is particularly useful for downloading component files from the Asset Download URL.
+ *
+ * Params:
+ *   downloadUrl = URL to download the file from
+ *   userName = empty or a username
+ *   passWord = empty or a password
+ * Returns:
+ *   the file content
+ * Throws: CURL or NexusIO exceptions on error
+ */
+const(ubyte)[] downloadFileFromNexus(string downloadUrl, string userName, string passWord) @trusted
+{
+    import std.string: empty;
+    import std.format: format;
+
+    assert(!downloadUrl.empty, "We need a non-empty downloadUrl string.");
+
+    version (LibCurl)
+    {
+        import std.net.curl : HTTP, get, CurlException;
+
+        auto http = HTTP();
+        http.setAuthentication(userName, passWord);
+        http.verbose = false;
+
+        /* Read the JSON file into memory, parse the contents */
+        const auto data = cast(ubyte[])get(downloadUrl, http);
+        auto statusCode = http.statusLine.code;
+
+        enforce!NexusIOException(statusCode / 100 == 2, "Failed to get JSON from url '%s'\n%s".format(downloadUrl, statusCode));
+    }
+    else version (DLangRequests)
+    {
+        import requests : Request, Response, BasicAuthentication;
+
+        auto rq = Request();
+        rq.authenticator = new BasicAuthentication(userName,passWord);
+        rq.verbosity = 0;
+
+        auto rs = rq.get(downloadUrl);
+
+        enforce!NexusIOException(rs.code / 100 == 2, "Failed to get JSON from url '%s'\n%s".format(downloadUrl, rq));
+
+        const auto data =  rs.responseBody.data;
+    }
+    else
+        static assert(false, "Select the HTTP backend in dub.json");
+
+    return data;
+}
+
+@("Testing download of data from some url, e.g for download of components")
+unittest
+{
+    import std.exception : assertThrown, assertNotThrown, enforce;
+    import std.process : environment;
+
+    auto userName = environment.get("NX_USER");
+    auto passWord = environment.get("NX_PASSWORD");
+
+    auto url = "http://httpbin.org/get";
+    const(ubyte)[] response;
+
+    assertNotThrown(response = downloadFileFromNexus(url, userName, passWord));
+    assert(response.length > 0, "No data received");
+}
