@@ -248,7 +248,7 @@ in (apiurl !is null, "We need a apiurl string.")
     import std.outbuffer : OutBuffer;
     import std.string : startsWith, representation;
 
-    import std.file : getcwd, read;
+    import std.file : getcwd, read, write;
     import std.stdio : writeln;
 
     assert(!apiurl.empty, "We need a non-empty apiurl string.");
@@ -256,7 +256,8 @@ in (apiurl !is null, "We need a apiurl string.")
     version (LibCurl)
     {
         pragma(msg, "NOTE: ", __PRETTY_FUNCTION__, " (LibCurl)");
-        import std.net.curl : HTTP, post;
+
+        import std.net.curl : HTTP, post, HTTPStatusException;
 
         string boundary = "------------------------1BffcBhChZIcjL6WJnbyZy";
 
@@ -266,7 +267,7 @@ in (apiurl !is null, "We need a apiurl string.")
             environment.get("NX_PASSWORD", passWord));
         http.addRequestHeader("accept", "application/json");
         http.addRequestHeader("Content-Type", "multipart/form-data; boundary=" ~ boundary);
-        http.verbose = false;
+        http.verbose = true;
 
         auto multipartData = new OutBuffer();
         foreach (data; formdata)
@@ -274,11 +275,10 @@ in (apiurl !is null, "We need a apiurl string.")
             if (!data.filePath.empty)
             {
                 multipartData.write(boundary ~ "\r\n");
-                multipartData.write(cast(ubyte[])(
-                        "Content-Disposition: form-data; name=\"" ~ data.name ~ "\"\r\n"));
+                multipartData.write("Content-Disposition: form-data; name=\"" ~ data.name ~ "\"\r\n");
                 multipartData.write("Content-Type: " ~ data.mimeType ~ "\r\n\r\n");
                 if (data.filePath.startsWith("@"))
-                    multipartData.write(cast(ubyte[])(std.file.read(data.filePath)));
+                    multipartData.write(cast(ubyte[])(read(data.filePath[1 .. $])));
                 else
                     multipartData.write(cast(ubyte[])(data.filePath));
                 multipartData.write("\r\n");
@@ -294,9 +294,9 @@ in (apiurl !is null, "We need a apiurl string.")
         }
         multipartData.write(boundary ~ "\r\n");
         ubyte[] postdata = multipartData.data[0 .. multipartData.offset];
-        // http.addRequestHeader("Content-Length",  postdata.length.to!string);
+        http.addRequestHeader("Content-Length",  postdata.length.to!string);
 
-        std.file.write("payload.bin", postdata);
+        write("payload.bin", postdata);
 
         /* Read the JSON file into memory, parse the contents */
 
@@ -305,14 +305,14 @@ in (apiurl !is null, "We need a apiurl string.")
         {
             jstr = post(apiurl, postdata, http);
         }
-        catch (std.net.curl.HTTPStatusException)
+        catch (HTTPStatusException e)
         {
-
+            writeln("HTTP Request failed: ", e.msg);
         }
         writeln(http.responseHeaders);
 
         auto statusCode = http.statusLine.code;
-        enforce!NexusIOException(statusCode / 100 == 2, "Failed to get JSON from url '%s'\n%s".format(apiurl, statusCode));
+        enforce!NexusIOException(statusCode / 100 == 2, "Failed to get JSON from url '%s'\n%s".format(apiurl, http.statusLine));
     }
     else version (DLangRequests)
     {
