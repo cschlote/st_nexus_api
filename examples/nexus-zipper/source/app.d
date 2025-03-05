@@ -1,7 +1,7 @@
-/** This is the Nexus-Cleaner utility.
+/** This is the Nexus-Zipper utility.
  *
  * Authors: Carsten Schlote <schlote@vahanus.net>
- * Copyright: 2018-2024 by Carsten Schlote
+ * Copyright: 2018-2025 by Carsten Schlote
  * License: GPL3, All rights reserved
  */
 module app;
@@ -26,6 +26,8 @@ bool argVerboseOutputs = false; /// Show detailed outputs
  */
 int main(string[] args)
 {
+	import std.process : environment;
+
 	string argServerURL;
 	string argNXRpositoryName;
 	string argNXPath;
@@ -76,7 +78,15 @@ int main(string[] args)
 
 	logFLine("NexusServer BaseURL : %s", argServerURL);
 
-	succ = runZipper(argServerURL, argNXRpositoryName, argNXPath, argOutputZipFile, argKeepPaths, argUser, argPassword);
+	// Set environment to override config
+	auto server = environment.get("NX_SERVER", argServerURL);
+	auto repo = environment.get("NX_REPOSITORY", argNXRpositoryName.length == 0 ? "TestRepo"
+			: argNXRpositoryName);
+	auto path = environment.get("NX_PATH", argNXPath.length == 0 ? "/" : argNXPath);
+	auto user = environment.get("NX_USER", argUser);
+	auto passwd = environment.get("NX_PASSWORD", argPassword);
+
+	succ = runZipper(server, repo, path, argOutputZipFile, argKeepPaths, user, passwd);
 
 	sw.stop;
 	logFLine("Total test duration: %s", sw.peek);
