@@ -21,6 +21,8 @@ import nexus_api_io;
 import nexus_api_ops;
 import std.regex;
 
+Duration aYearDuration = dur!"weeks"(52); // 1 year = 52 weeks
+
 /** return a Duration from a human readable string
  *
  * The string is a number. Optionally a unit suffix may follow : w, d, h, m (Week,Day,Hour,Minute).
@@ -48,7 +50,9 @@ Duration getDurationFromString(string age)
         logFLine("Can't convert '%s' to long", age);
     }
 
-    if (age.endsWith("w"))
+    if (age.endsWith("y"))
+        d = aYearDuration * ageval; // 1 year = 52 weeks;
+    else if (age.endsWith("w"))
         d = dur!"weeks"(ageval);
     else if (age.endsWith("d"))
         d = dur!"days"(ageval);
@@ -56,15 +60,18 @@ Duration getDurationFromString(string age)
         d = dur!"hours"(ageval);
     else if (age.endsWith("m"))
         d = dur!"minutes"(ageval);
-    else
+    else if (age.endsWith("s"))
         d = dur!"seconds"(ageval);
+    else
+        d = aYearDuration; // Idiotproof, no suffix means years!
     return d;
 }
 
 @("Test getDurationFromString()")
 unittest
 {
-    assert(getDurationFromString("1") == dur!"seconds"(1));
+    assert(getDurationFromString("1") == aYearDuration);
+    assert(getDurationFromString("1y") == aYearDuration);
     assert(getDurationFromString("1s") == dur!"seconds"(1));
     assert(getDurationFromString("1m") == dur!"minutes"(1));
     assert(getDurationFromString("1h") == dur!"hours"(1));
