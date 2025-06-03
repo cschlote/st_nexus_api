@@ -43,8 +43,8 @@ int main(string[] args)
 			std.getopt.config.required,
 			"config|c", "The config JSON file", &argConfigFileName,
 			"cache|j", "Cache downloaded components", &argCacheFileName,
-			"delete|d", "Delete outdated items", &argDeleteEntries,
-			"monitor|m", "Monitor free memory and call on demand", &argMonitor,
+			"delete|d", "Really delete outdated items on server", &argDeleteEntries,
+			"monitor|m", "Monitor free memory and clean files on demand", &argMonitor,
 			"monitortime|t", "Set looping interval in seconds", &argMonitorLoopDelaySeconds,
 			"size|s", "Amount of MB memory to free", &argFreeSize,
 			"verbose|v", "Verbose outputs (WIP)", &argVerboseOutputs
