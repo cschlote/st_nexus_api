@@ -15,9 +15,17 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug with Config",
+            "name": "Debug with Config.json (monitor)",
             "program": "${workspaceFolder}/nexus-cleaner",
-            "args": [ "-v", "-c", "tests/config.json", "-j", "tests/cache.json", "-s", "200", "-m", "-t", "5" ],
+            "args": [ "-v", "-c", "tests/config.json", "-j", "tests/cache.json", "-s", "1", "-m", "-t", "5" ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug with Config.json (single)",
+            "program": "${workspaceFolder}/nexus-cleaner",
+            "args": [ "-v", "-c", "tests/config.json", "-j", "tests/cache.json", "-s", "1" ],
             "cwd": "${workspaceFolder}"
         },
         {
