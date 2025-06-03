@@ -66,6 +66,14 @@ int main(string[] args)
 		logLine(ce.msg);
 		return 1;
 	}
+	if (argCacheFileName)
+	{
+		if (argConfigFileName == argCacheFileName)
+		{
+			logLine("You can't use the same file for --config and --cache options.");
+			return 1;
+		}
+	}
 
 	bool succ = false;
 	auto jcfg = new NexusCleanerConfig();
