@@ -187,18 +187,18 @@ lastModified:
     assert(lstTime == SysTime.fromISOExtString("2023-01-10T00:00:00Z").to!DateTime);
 
     Duration expectedDuration = nowTime - lstTime;
-    assert(duration == expectedDuration, text("duration:", duration, " expect:",expectedDuration));
+    assert(duration == expectedDuration, text("duration:", duration, " expect:", expectedDuration));
 }
 
 /** Group array into components
  *
  * For the integrator we have special file format, which can be separated with '_'.
- * When 
- * 
+ * When
+ *
  * Params:
  *   nxcs = NxComponents
  *   groupFilesBy = String which separates the filenames into at least 2 parts
- * Returns: 
+ * Returns:
  *   A wrapped nxcomponent, either for a single 'ungrouped' group, or the grouped filename part.
  */
 NxComponent[][string] groupNxComponents(NxComponent[] nxcs, string groupFilesBy)
@@ -259,7 +259,7 @@ bool runCleaner(NexusCleanerConfig nccObj, bool argDeleteEntries, string argCach
     auto jsonObj = nxobj.getNXStatusCheck();
     assert(jsonObj.type == JSONType.object);
 
-    NxComponent[] deleteNxComponents;
+    NxComponent[] deleteNxComponents; // A list of components to delete
 
     assert(nccObj.repositories.length, "Need at least one repository");
     foreach (repoidx, repo; nccObj.repositories)
@@ -301,7 +301,7 @@ bool runCleaner(NexusCleanerConfig nccObj, bool argDeleteEntries, string argCach
                 }
                 logFLine("%02d:--- I Found %d entries within this group", rulenr, matchGroup.length);
 
-                // Sorted 
+                // Sorted
                 auto sorted = matchGroup.sort!("a.name > b.name").array;
                 foreach (idx, nxc; sorted)
                 {
@@ -372,8 +372,9 @@ bool runCleaner(NexusCleanerConfig nccObj, bool argDeleteEntries, string argCach
     auto deleteNxComponentsDL = deleteNxComponentsSorted.filter!filterByExistingDLTime;
     auto deleteNxComponentsNewOrder = chain(deleteNxComponentsNoDL, deleteNxComponentsDL);
     auto deleteNxComponentsOrdered = deleteNxComponentsNewOrder.enumerate;
+    logFLine("Sorted expired item list by no access duration and size.");
 
-    size_t allreadyFreed = 0;
+    size_t alreadyFreed = 0;
     bool hasFreedEnough = false;
 
     logFLine("We are requested to free up to %d MiB of memory", reqFreeSize / 2 ^^ 20);
@@ -383,23 +384,23 @@ bool runCleaner(NexusCleanerConfig nccObj, bool argDeleteEntries, string argCach
     {
         DateTime crtTime, dldTime, modTime, lstTime;
         Duration holdTime = getNoAccessDuration(nxc, crtTime, dldTime, modTime, lstTime);
-        hasFreedEnough = allreadyFreed >= reqFreeSize;
+        hasFreedEnough = alreadyFreed >= reqFreeSize;
         char freedChar = hasFreedEnough ? '=' : 'D';
         logFLine("%c:%03d: %s", freedChar, idx, nxc.name);
         if (!hasFreedEnough)
         {
             if (argDeleteEntries)
                 nxobj.deleteNexusComponent(nxc.id);
-            allreadyFreed += nxc.assets[0].fileSize;
+            alreadyFreed += nxc.assets[0].fileSize;
         }
         bool hasDLTime = getDataTimeFromExtISOFormat(nxc.assets[0].lastDownloaded) != DateTime(1, 1, 1);
         logFLine("%c:%03d: Size=%12d IdleAge:%s HasDLTime:%s", freedChar, idx,
             nxc.assets[0].fileSize, holdTime.total!"days", hasDLTime.to!string);
 
-        hasFreedEnough = allreadyFreed > reqFreeSize;
-        if (argDeleteEntries && hasFreedEnough)
+        hasFreedEnough = alreadyFreed >= reqFreeSize;
+        if (hasFreedEnough)
         {
-            logFLine("Freed %d MiB and more than requested %d MiB. We stop here.", allreadyFreed / 2 ^^ 20, reqFreeSize / 2 ^^ 20);
+            logFLine("Freed %d MiB and more than requested %d MiB. We stop here.", alreadyFreed / 2 ^^ 20, reqFreeSize / 2 ^^ 20);
             break;
         }
     }
@@ -408,7 +409,7 @@ bool runCleaner(NexusCleanerConfig nccObj, bool argDeleteEntries, string argCach
         nxobj.saveNexusComponents(argCacheFileName);
 
     if (!argDeleteEntries)
-        logFLine("Total size of old files : %s MiB.", allreadyFreed / 2 ^^ 20);
+        logFLine("Total size of old files : %s MiB.", alreadyFreed / 2 ^^ 20);
 
     logLine("Finished clean job.");
     return hasFreedEnough;
