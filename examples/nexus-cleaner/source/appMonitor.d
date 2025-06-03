@@ -37,7 +37,7 @@ NxBlob[] getBlobSpaces(NexusCleanerConfig nccObj)
     try
         nxobj.setServerUrl(server);
     catch (ConnectError)
-        assert(false, text("SRV:",server, " Network problem?"));
+        assert(false, text("SRV:", server, " Network problem?"));
 
     NxBlob[] nxbs;
     nxbs = nxobj.getNexusBlobs();
@@ -80,7 +80,9 @@ bool runMonitor(NexusCleanerConfig nccObj, int argMonitorLoopDelaySeconds, ref s
 
     do
     {
-        logLine("Checking free space");
+        auto now = Clock.currTime();
+        logFLine("%s: Checking free space", now.toISOExtString());
+
         reqFreeSize = 0;
         if (nccObj.volumes.length)
         {
@@ -96,7 +98,7 @@ bool runMonitor(NexusCleanerConfig nccObj, int argMonitorLoopDelaySeconds, ref s
                         reqFreeSize = vol.minFreeSize - freeMB;
                         lowmem = true;
                     }
-                    logFLine("%c Mountpoint:'%s' FreeMB:%d Limit:%d",
+                    logFLine("%s: %c Mountpoint:'%s' FreeMB:%d Limit:%d", now.toISOExtString(),
                         lowmem ? '!' : '-',
                         vol.mountpoint, freeMB, vol.minFreeSize);
                 }
@@ -119,7 +121,7 @@ bool runMonitor(NexusCleanerConfig nccObj, int argMonitorLoopDelaySeconds, ref s
                         reqFreeSize = vol.minFreeSize - freeMB;
                         lowmem = true;
                     }
-                    logFLine("%c Blobstore:'%s' FreeMB:%d Limit:%d",
+                    logFLine("%s: %c Blobstore:'%s' FreeMB:%d Limit:%d", now.toISOExtString(),
                         lowmem ? '!' : '-',
                         vol.blobstore, freeMB, vol.minFreeSize);
                 }
