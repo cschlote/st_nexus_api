@@ -349,6 +349,16 @@ bool runCleaner(NexusCleanerConfig nccObj, bool argDeleteEntries, string argCach
     }
 
     logFLine("We have %d components in expire list.", deleteNxComponents.length);
+    if (deleteNxComponents.length == 0)
+    {
+        if (reqFreeSize == 0)
+        {
+            logLine("No expired items found and no memory to free.");
+            return true;
+        }
+        logFLine("No expired items found, but we are requested to free %d MiB of memory.", reqFreeSize / 2 ^^ 20);
+        return false; // No files given to delete, so we fail here.
+    }
 
     auto deleteNxComponentsSorted = deleteNxComponents.sort!sortByNoAccessDurationAndSize;
     auto deleteNxComponentsNoDL = deleteNxComponentsSorted.filter!filterByMissingDLTime;
